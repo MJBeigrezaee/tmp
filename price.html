@@ -2,159 +2,200 @@
 <html lang="en" dir="ltr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Live Gold & Currency Analytics Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Market Analytics</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
             font-family: 'Inter', sans-serif;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
-            background: linear-gradient(135deg, #0b0f19 0%, #111827 100%);
+            background: #070a13;
             color: #f3f4f6;
             display: flex;
             justify-content: center;
-            align-items: center;
+            align-items: flex-start;
             min-height: 100vh;
-            padding: 20px;
+            padding: 16px;
         }
 
         .dashboard-container {
             width: 100%;
-            max-width: 850px;
-            background: rgba(17, 24, 39, 0.75);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 28px;
-            padding: 35px;
-            box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.6);
+            max-width: 440px; /* بهینه‌شده دقیق برای عرض موبایل */
+            margin-top: 10px;
         }
 
         header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 30px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-            padding-bottom: 20px;
+            margin-bottom: 20px;
+            padding: 0 4px;
         }
 
         header h1 {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: #38bdf8;
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: #ffffff;
             letter-spacing: -0.02em;
         }
 
         .status-badge {
-            font-size: 0.75rem;
-            font-weight: 600;
+            font-size: 0.7rem;
+            font-weight: 700;
             background: rgba(56, 189, 248, 0.08);
             color: #38bdf8;
-            padding: 8px 16px;
-            border-radius: 30px;
+            padding: 6px 12px;
+            border-radius: 20px;
             border: 1px solid rgba(56, 189, 248, 0.15);
         }
 
-        .analytics-table {
-            width: 100%;
-            border-collapse: separate;
-            border-spacing: 0;
-            text-align: left;
+        /* کارت‌های فشرده اپلیکیشنی */
+        .asset-card {
+            background: rgba(17, 24, 39, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 20px;
+            padding: 16px;
+            margin-bottom: 12px;
+            transition: border-color 0.2s ease;
         }
 
-        .analytics-table th {
-            padding: 16px 20px;
-            color: #6b7280;
-            font-size: 0.8rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        .asset-card.premium {
+            background: linear-gradient(145deg, rgba(17, 24, 39, 0.8) 0%, rgba(3, 7, 18, 0.6) 100%);
+            border-color: rgba(56, 189, 248, 0.15);
         }
 
-        .analytics-table td {
-            padding: 20px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
-            font-size: 1rem;
-            font-weight: 500;
-            vertical-align: middle;
-        }
-
-        .analytics-table tr:last-child td {
-            border-bottom: none;
+        /* ساختار ردیف اصلی: فقط اطلاعات ضروری اولیه */
+        .card-main {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
         .asset-info {
             display: flex;
             align-items: center;
-            gap: 14px;
+            gap: 12px;
         }
 
         .asset-icon {
-            font-size: 1.25rem;
-            background: rgba(255, 255, 255, 0.04);
-            width: 38px;
-            height: 38px;
+            font-size: 1.1rem;
+            background: rgba(255, 255, 255, 0.03);
+            width: 36px;
+            height: 36px;
             display: flex;
             align-items: center;
             justify-content: center;
-            border-radius: 12px;
+            border-radius: 10px;
             border: 1px solid rgba(255, 255, 255, 0.05);
         }
 
+        .premium .asset-icon {
+            background: rgba(56, 189, 248, 0.08);
+            border-color: rgba(56, 189, 248, 0.2);
+        }
+
         .asset-title {
-            font-weight: 600;
+            font-weight: 700;
             color: #ffffff;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
         }
 
         .asset-subtitle {
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             color: #6b7280;
-            font-weight: 400;
             display: block;
             margin-top: 1px;
         }
 
+        .price-area {
+            text-align: right;
+        }
+
         .price-value {
             font-family: monospace;
-            font-weight: 700;
-            font-size: 1.1rem;
+            font-weight: 800;
+            font-size: 1.15rem;
+            color: #ffffff;
         }
 
-        .up-trend {
-            color: #10b981 !important;
-            font-weight: 600;
-        }
-
-        .down-trend {
-            color: #ef4444 !important;
-            font-weight: 600;
-        }
-
-        .neutral-trend {
-            color: #9ca3af;
-        }
-
-        .premium-ratio-row {
-            background: linear-gradient(90deg, rgba(56, 189, 248, 0.03) 0%, rgba(0, 0, 0, 0) 100%);
-        }
-
-        .premium-ratio-row td:first-child .asset-icon {
-            background: rgba(56, 189, 248, 0.12);
-            border-color: rgba(56, 189, 248, 0.25);
-        }
-
-        .premium-ratio-row .price-value {
+        .premium .price-value {
             color: #38bdf8;
         }
+
+        /* بخش فولد شده پیشرفته (پنهان در حالت اولیه) */
+        .card-details {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+            border-top: 1px solid rgba(255, 255, 255, 0.0);
+            margin-top: 0;
+            padding-top: 0;
+        }
+
+        .card-details.expanded {
+            max-height: 100px; /* فضای کافی برای نمایش دیتای فولد شده */
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            margin-top: 12px;
+            padding-top: 12px;
+        }
+
+        .details-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            text-align: center;
+        }
+
+        .detail-item {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .detail-label {
+            font-size: 0.65rem;
+            color: #6b7280;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .detail-value {
+            font-size: 0.8rem;
+            font-weight: 700;
+            font-family: monospace;
+        }
+
+        /* دکمه باز و بسته کردن فولد */
+        .toggle-details-btn {
+            font-size: 0.65rem;
+            font-weight: 700;
+            color: #6b7280;
+            background: none;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            margin-top: 8px;
+            margin-left: auto; /* انتقال دکمه به سمت راست انتهای کارت */
+        }
+
+        .toggle-details-btn:focus {
+            outline: none;
+        }
+
+        .up-trend { color: #10b981 !important; }
+        .down-trend { color: #ef4444 !important; }
+        .neutral-trend { color: #9ca3af; }
 
         .loading-pulse {
             animation: pulseEffect 1.6s infinite ease-in-out;
@@ -168,10 +209,8 @@
 
         #tgju-hidden-wrapper {
             display: none !important;
-            visibility: hidden !important;
-            width: 0 !important;
-            height: 0 !important;
-            overflow: hidden !important;
+            visibility: hidden;
+            width: 0; height: 0; overflow: hidden;
         }
     </style>
 </head>
@@ -179,116 +218,145 @@
 
 <div class="dashboard-container">
     <header>
-        <h1>⚡ Live Market Analytics</h1>
-        <div id="runtime-clock" class="status-badge loading-pulse">Connecting to Live Feed...</div>
+        <h1>⚡ Analytics</h1>
+        <div id="runtime-clock" class="status-badge loading-pulse">Connecting...</div>
     </header>
 
-    <table class="analytics-table">
-        <thead>
-            <tr>
-                <th>Asset / Ratio</th>
-                <th>Live Price (IRR)</th>
-                <th>24h Change</th>
-                <th>Low (24h)</th>
-                <th>High (24h)</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>
-                    <div class="asset-info">
-                        <div class="asset-icon">🔸</div>
-                        <div>
-                            <span class="asset-title">Gold 18k</span>
-                            <span class="asset-subtitle">per Gram</span>
-                        </div>
-                    </div>
-                </td>
-                <td id="row1-p" class="price-value loading-pulse">Loading...</td>
-                <td id="row1-c" class="loading-pulse">--</td>
-                <td id="row1-l" class="neutral-trend loading-pulse">--</td>
-                <td id="row1-h" class="neutral-trend loading-pulse">--</td>
-            </tr>
+    <div class="asset-card">
+        <div class="card-main">
+            <div class="asset-info">
+                <div class="asset-icon">🔸</div>
+                <div>
+                    <span class="asset-title">Gold 18k</span>
+                    <span class="asset-subtitle">per Gram (IRR)</span>
+                </div>
+            </div>
+            <div class="price-area">
+                <span id="row1-p" class="price-value loading-pulse">Loading...</span>
+            </div>
+        </div>
+        <div id="details-row1" class="card-details">
+            <div class="details-grid">
+                <div class="detail-item"><span class="detail-label">24h Chg</span><span id="row1-c" class="detail-value">--</span></div>
+                <div class="detail-item"><span class="detail-label">Low</span><span id="row1-l" class="detail-value neutral-trend">--</span></div>
+                <div class="detail-item"><span class="detail-label">High</span><span id="row1-h" class="detail-value neutral-trend">--</span></div>
+            </div>
+        </div>
+        <button class="toggle-details-btn" onclick="toggleFold('details-row1', this)">Analytics ▾</button>
+    </div>
 
-            <tr>
-                <td>
-                    <div class="asset-info">
-                        <div class="asset-icon">💶</div>
-                        <div>
-                            <span class="asset-title">Euro</span>
-                            <span class="asset-subtitle">EUR / IRR</span>
-                        </div>
-                    </div>
-                </td>
-                <td id="row2-p" class="price-value loading-pulse">Loading...</td>
-                <td id="row2-c" class="loading-pulse">--</td>
-                <td id="row2-l" class="neutral-trend loading-pulse">--</td>
-                <td id="row2-h" class="neutral-trend loading-pulse">--</td>
-            </tr>
+    <div class="asset-card">
+        <div class="card-main">
+            <div class="asset-info">
+                <div class="asset-icon">Exchange Rates💶</div>
+                <div>
+                    <span class="asset-title">Euro</span>
+                    <span class="asset-subtitle">EUR / IRR</span>
+                </div>
+            </div>
+            <div class="price-area">
+                <span id="row2-p" class="price-value loading-pulse">Loading...</span>
+            </div>
+        </div>
+        <div id="details-row2" class="card-details">
+            <div class="details-grid">
+                <div class="detail-item"><span class="detail-label">24h Chg</span><span id="row2-c" class="detail-value">--</span></div>
+                <div class="detail-item"><span class="detail-label">Low</span><span id="row2-l" class="detail-value neutral-trend">--</span></div>
+                <div class="detail-item"><span class="detail-label">High</span><span id="row2-h" class="detail-value neutral-trend">--</span></div>
+            </div>
+        </div>
+        <button class="toggle-details-btn" onclick="toggleFold('details-row2', this)">Analytics ▾</button>
+    </div>
 
-            <tr>
-                <td>
-                    <div class="asset-info">
-                        <div class="asset-icon">🇩🇰</div>
-                        <div>
-                            <span class="asset-title">Danish Krone</span>
-                            <span class="asset-subtitle">DKK / IRR</span>
-                        </div>
-                    </div>
-                </td>
-                <td id="row3-p" class="price-value loading-pulse">Loading...</td>
-                <td id="row3-c" class="loading-pulse">--</td>
-                <td id="row3-l" class="neutral-trend loading-pulse">--</td>
-                <td id="row3-h" class="neutral-trend loading-pulse">--</td>
-            </tr>
+    <div class="asset-card">
+        <div class="card-main">
+            <div class="asset-info">
+                <div class="asset-icon">🇩🇰</div>
+                <div>
+                    <span class="asset-title">Danish Krone</span>
+                    <span class="asset-subtitle">DKK / IRR</span>
+                </div>
+            </div>
+            <div class="price-area">
+                <span id="row3-p" class="price-value loading-pulse">Loading...</span>
+            </div>
+        </div>
+        <div id="details-row3" class="card-details">
+            <div class="details-grid">
+                <div class="detail-item"><span class="detail-label">24h Chg</span><span id="row3-c" class="detail-value">--</span></div>
+                <div class="detail-item"><span class="detail-label">Low</span><span id="row3-l" class="detail-value neutral-trend">--</span></div>
+                <div class="detail-item"><span class="detail-label">High</span><span id="row3-h" class="detail-value neutral-trend">--</span></div>
+            </div>
+        </div>
+        <button class="toggle-details-btn" onclick="toggleFold('details-row3', this)">Analytics ▾</button>
+    </div>
 
-            <tr class="premium-ratio-row">
-                <td>
-                    <div class="asset-info">
-                        <div class="asset-icon">📊</div>
-                        <div>
-                            <span class="asset-title" style="color: #38bdf8;">Gold / EUR</span>
-                            <span class="asset-subtitle">Gram Value in Euro</span>
-                        </div>
-                    </div>
-                </td>
-                <td id="ratio-ge-val" class="price-value">--.-- EUR</td>
-                <td id="ratio-ge-chg">--</td>
-                <td id="ratio-ge-low" class="neutral-trend">--.--</td>
-                <td id="ratio-ge-high" class="neutral-trend">--.--</td>
-            </tr>
+    <div class="asset-card premium">
+        <div class="card-main">
+            <div class="asset-info">
+                <div class="asset-icon">📊</div>
+                <div>
+                    <span class="asset-title" style="color: #38bdf8;">Gold / EUR</span>
+                    <span class="asset-subtitle">Gram Value in Euro</span>
+                </div>
+            </div>
+            <div class="price-area">
+                <span id="ratio-ge-val" class="price-value">--.-- EUR</span>
+            </div>
+        </div>
+        <div id="details-row4" class="card-details">
+            <div class="details-grid">
+                <div class="detail-item"><span class="detail-label">24h Chg</span><span id="ratio-ge-chg" class="detail-value">--</span></div>
+                <div class="detail-item"><span class="detail-label">Min</span><span id="ratio-ge-low" class="detail-value neutral-trend">--.--</span></div>
+                <div class="detail-item"><span class="detail-label">Max</span><span id="ratio-ge-high" class="detail-value neutral-trend">--.--</span></div>
+            </div>
+        </div>
+        <button class="toggle-details-btn" onclick="toggleFold('details-row4', this)">Analytics ▾</button>
+    </div>
 
-            <tr class="premium-ratio-row">
-                <td>
-                    <div class="asset-info">
-                        <div class="asset-icon">⚙️</div>
-                        <div>
-                            <span class="asset-title" style="color: #38bdf8;">Gold / DKK</span>
-                            <span class="asset-subtitle">Gram Value in Krone</span>
-                        </div>
-                    </div>
-                </td>
-                <td id="ratio-gd-val" class="price-value">--.-- DKK</td>
-                <td id="ratio-gd-chg">--</td>
-                <td id="ratio-gd-low" class="neutral-trend">--.--</td>
-                <td id="ratio-gd-high" class="neutral-trend">--.--</td>
-            </tr>
-        </tbody>
-    </table>
+    <div class="asset-card premium">
+        <div class="card-main">
+            <div class="asset-info">
+                <div class="asset-icon">⚙️</div>
+                <div>
+                    <span class="asset-title" style="color: #38bdf8;">Gold / DKK</span>
+                    <span class="asset-subtitle">Gram Value in Krone</span>
+                </div>
+            </div>
+            <div class="price-area">
+                <span id="ratio-gd-val" class="price-value">--.-- DKK</span>
+            </div>
+        </div>
+        <div id="details-row5" class="card-details">
+            <div class="details-grid">
+                <div class="detail-item"><span class="detail-label">24h Chg</span><span id="ratio-gd-chg" class="detail-value">--</span></div>
+                <div class="detail-item"><span class="detail-label">Min</span><span id="ratio-gd-low" class="detail-value neutral-trend">--.--</span></div>
+                <div class="detail-item"><span class="detail-label">Max</span><span id="ratio-gd-high" class="detail-value neutral-trend">--.--</span></div>
+            </div>
+        </div>
+        <button class="toggle-details-btn" onclick="toggleFold('details-row5', this)">Analytics ▾</button>
+    </div>
 </div>
 
 <div id="tgju-hidden-wrapper">
-    <tgju
-        type="market-data"
-        items="137121,137205,137224"
-        columns="diff,low,high,time"
-        token="webservice"
-    ></tgju>
+    <tgju type="market-data" items="137121,137205,137224" columns="diff,low,high,time" token="webservice"></tgju>
 </div>
 
 <script src="https://api.tgju.org/v1/widget/v2" defer></script>
 
 <script>
+    // تابع مدیریت فولد و اکسپند کردن اطلاعات فرعی
+    function toggleFold(elementId, btn) {
+        const detailBlock = document.getElementById(elementId);
+        if (detailBlock.classList.contains('expanded')) {
+            detailBlock.classList.remove('expanded');
+            btn.innerHTML = 'Analytics ▾';
+        } else {
+            detailBlock.classList.add('expanded');
+            btn.innerHTML = 'Close ▴';
+        }
+    }
+
     function cleanAndParse(inputStr) {
         if (!inputStr) return 0;
         const faDigits = ['۰','۱','۲','۳','۴','۵','۶','۷','۸','۹'];
@@ -301,94 +369,92 @@
 
     function renderEngine() {
         try {
-            const rawRows = document.querySelectorAll('#tgju-hidden-wrapper table tbody tr');
-            if (rawRows.length < 3) return;
+            const rawRows = document.querySelectorAll('#tgju-hidden-wrapper table tbody tr, #tgju-hidden-wrapper .tgju-widget-row');
+            if (rawRows.length < 3) return false;
 
             const dataset = [];
 
             rawRows.forEach((row) => {
-                const fields = row.querySelectorAll('td');
+                const fields = row.querySelectorAll('td, div.tgju-widget-cell');
                 if (fields.length >= 5) {
-                    const currentPrice = cleanAndParse(fields[1]?.innerText);
-                    const changeString = fields[2]?.innerText || "0%";
+                    const currentPrice = cleanAndParse(fields[1]?.innerText || fields[1]?.textContent);
+                    const changeString = (fields[2]?.innerText || fields[2]?.textContent || "0%").trim();
                     const changeFloat = parseFloat(changeString.replace('%', '').trim());
-                    const lowest = cleanAndParse(fields[3]?.innerText);
-                    const highest = cleanAndParse(fields[4]?.innerText);
+                    const lowest = cleanAndParse(fields[3]?.innerText || fields[3]?.textContent);
+                    const highest = cleanAndParse(fields[4]?.innerText || fields[4]?.textContent);
 
-                    dataset.push({ currentPrice, changeString, changeFloat, lowest, highest });
+                    if (currentPrice > 0) {
+                        dataset.push({ currentPrice, changeString, changeFloat, lowest, highest });
+                    }
                 }
             });
+
+            if (dataset.length < 3) return false;
 
             const goldData = dataset[0];
             const euroData = dataset[1];
             const dkkData = dataset[2];
 
-            if (goldData.currentPrice > 0 && euroData.currentPrice > 0 && dkkData.currentPrice > 0) {
-                
-                document.querySelectorAll('.loading-pulse').forEach(item => item.classList.remove('loading-pulse'));
+            document.querySelectorAll('.loading-pulse').forEach(item => item.classList.remove('loading-pulse'));
 
-                // 1. Gold
-                document.getElementById('row1-p').innerText = goldData.currentPrice.toLocaleString();
-                document.getElementById('row1-c').innerText = goldData.changeString;
-                document.getElementById('row1-c').className = goldData.changeFloat >= 0 ? 'up-trend' : 'down-trend';
-                document.getElementById('row1-l').innerText = goldData.lowest.toLocaleString();
-                document.getElementById('row1-h').innerText = goldData.highest.toLocaleString();
+            // 1. Gold
+            document.getElementById('row1-p').innerText = goldData.currentPrice.toLocaleString();
+            document.getElementById('row1-c').innerText = goldData.changeString;
+            document.getElementById('row1-c').className = 'detail-value ' + (goldData.changeFloat >= 0 ? 'up-trend' : 'down-trend');
+            document.getElementById('row1-l').innerText = goldData.lowest.toLocaleString();
+            document.getElementById('row1-h').innerText = goldData.highest.toLocaleString();
 
-                // 2. Euro
-                document.getElementById('row2-p').innerText = euroData.currentPrice.toLocaleString();
-                document.getElementById('row2-c').innerText = euroData.changeString;
-                document.getElementById('row2-c').className = euroData.changeFloat >= 0 ? 'up-trend' : 'down-trend';
-                document.getElementById('row2-l').innerText = euroData.lowest.toLocaleString();
-                document.getElementById('row2-h').innerText = euroData.highest.toLocaleString();
+            // 2. Euro
+            document.getElementById('row2-p').innerText = euroData.currentPrice.toLocaleString();
+            document.getElementById('row2-c').innerText = euroData.changeString;
+            document.getElementById('row2-c').className = 'detail-value ' + (euroData.changeFloat >= 0 ? 'up-trend' : 'down-trend');
+            document.getElementById('row2-l').innerText = euroData.lowest.toLocaleString();
+            document.getElementById('row2-h').innerText = euroData.highest.toLocaleString();
 
-                // 3. DKK
-                document.getElementById('row3-p').innerText = dkkData.currentPrice.toLocaleString();
-                document.getElementById('row3-c').innerText = dkkData.changeString;
-                document.getElementById('row3-c').className = dkkData.changeFloat >= 0 ? 'up-trend' : 'down-trend';
-                document.getElementById('row3-l').innerText = dkkData.lowest.toLocaleString();
-                document.getElementById('row3-h').innerText = dkkData.highest.toLocaleString();
+            // 3. DKK
+            document.getElementById('row3-p').innerText = dkkData.currentPrice.toLocaleString();
+            document.getElementById('row3-c').innerText = dkkData.changeString;
+            document.getElementById('row3-c').className = 'detail-value ' + (dkkData.changeFloat >= 0 ? 'up-trend' : 'down-trend');
+            document.getElementById('row3-l').innerText = dkkData.lowest.toLocaleString();
+            document.getElementById('row3-h').innerText = dkkData.highest.toLocaleString();
 
-                // 4. Gold / EUR Ratio
-                const geRatio = (goldData.currentPrice / euroData.currentPrice).toFixed(2);
-                const geLow = (goldData.lowest / euroData.highest).toFixed(2);
-                const geHigh = (goldData.highest / euroData.lowest).toFixed(2);
-                const geChange = (goldData.changeFloat - euroData.changeFloat).toFixed(2);
+            // 4. Gold / EUR Ratio
+            const geRatio = (goldData.currentPrice / euroData.currentPrice).toFixed(2);
+            const geLow = (goldData.lowest / euroData.highest).toFixed(2);
+            const geHigh = (goldData.highest / euroData.lowest).toFixed(2);
+            const geChange = (goldData.changeFloat - euroData.changeFloat).toFixed(2);
 
-                document.getElementById('ratio-ge-val').innerText = geRatio + " EUR";
-                document.getElementById('ratio-ge-low').innerText = geLow + " EUR";
-                document.getElementById('ratio-ge-high').innerText = geHigh + " EUR";
-                document.getElementById('ratio-ge-chg').innerText = (geChange >= 0 ? '+' : '') + geChange + '%';
-                document.getElementById('ratio-ge-chg').className = geChange >= 0 ? 'up-trend' : 'down-trend';
+            document.getElementById('ratio-ge-val').innerText = geRatio + " EUR";
+            document.getElementById('ratio-ge-low').innerText = geLow + " EUR";
+            document.getElementById('ratio-ge-high').innerText = geHigh + " EUR";
+            document.getElementById('ratio-ge-chg').innerText = (geChange >= 0 ? '+' : '') + geChange + '%';
+            document.getElementById('ratio-ge-chg').className = 'detail-value ' + (geChange >= 0 ? 'up-trend' : 'down-trend');
 
-                // 5. Gold / DKK Ratio
-                const gdRatio = (goldData.currentPrice / dkkData.currentPrice).toFixed(2);
-                const gdLow = (goldData.lowest / dkkData.highest).toFixed(2);
-                const gdHigh = (goldData.highest / dkkData.lowest).toFixed(2);
-                const gdChange = (goldData.changeFloat - dkkData.changeFloat).toFixed(2);
+            // 5. Gold / DKK Ratio
+            const gdRatio = (goldData.currentPrice / dkkData.currentPrice).toFixed(2);
+            const gdLow = (goldData.lowest / dkkData.highest).toFixed(2);
+            const gdHigh = (goldData.highest / dkkData.lowest).toFixed(2);
+            const gdChange = (goldData.changeFloat - dkkData.changeFloat).toFixed(2);
 
-                document.getElementById('ratio-gd-val').innerText = gdRatio + " DKK";
-                document.getElementById('ratio-gd-low').innerText = gdLow + " DKK";
-                document.getElementById('ratio-gd-high').innerText = gdHigh + " DKK";
-                document.getElementById('ratio-gd-chg').innerText = (gdChange >= 0 ? '+' : '') + gdChange + '%';
-                document.getElementById('ratio-gd-chg').className = gdChange >= 0 ? 'up-trend' : 'down-trend';
+            document.getElementById('ratio-gd-val').innerText = gdRatio + " DKK";
+            document.getElementById('ratio-gd-low').innerText = gdLow + " DKK";
+            document.getElementById('ratio-gd-high').innerText = gdHigh + " DKK";
+            document.getElementById('ratio-gd-chg').innerText = (gdChange >= 0 ? '+' : '') + gdChange + '%';
+            document.getElementById('ratio-gd-chg').className = 'detail-value ' + (gdChange >= 0 ? 'up-trend' : 'down-trend');
 
-                const timeOptions = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
-                document.getElementById('runtime-clock').innerText = `Live: ${new Date().toLocaleTimeString('en-US', timeOptions)}`;
-            }
+            const timeOptions = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
+            document.getElementById('runtime-clock').innerText = `Live: ${new Date().toLocaleTimeString('en-US', timeOptions)}`;
+            
+            return true;
         } catch (err) {
-            console.log("Syncing matrix...");
+            return false;
         }
     }
 
-    setInterval(() => {
-        const checkRows = document.querySelectorAll('#tgju-hidden-wrapper table tbody tr');
-        if (checkRows.length >= 3) {
-            const validationCell = checkRows[0].querySelectorAll('td')[1]?.innerText;
-            if (validationCell && validationCell !== "") {
-                renderEngine();
-            }
-        }
-    }, 1000);
+    const targetNode = document.getElementById('tgju-hidden-wrapper');
+    const observer = new MutationObserver(() => { renderEngine(); });
+    observer.observe(targetNode, { attributes: true, childList: true, subtree: true });
+    setInterval(renderEngine, 1000);
 </script>
 
 </body>
