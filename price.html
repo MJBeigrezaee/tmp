@@ -27,7 +27,7 @@
 
         .dashboard-container {
             width: 100%;
-            max-width: 440px; /* بهینه‌شده دقیق برای عرض موبایل */
+            max-width: 440px;
             margin-top: 10px;
         }
 
@@ -56,7 +56,6 @@
             border: 1px solid rgba(56, 189, 248, 0.15);
         }
 
-        /* کارت‌های فشرده اپلیکیشنی */
         .asset-card {
             background: rgba(17, 24, 39, 0.7);
             backdrop-filter: blur(12px);
@@ -73,7 +72,6 @@
             border-color: rgba(56, 189, 248, 0.15);
         }
 
-        /* ساختار ردیف اصلی: فقط اطلاعات ضروری اولیه */
         .card-main {
             display: flex;
             justify-content: space-between;
@@ -131,7 +129,6 @@
             color: #38bdf8;
         }
 
-        /* بخش فولد شده پیشرفته (پنهان در حالت اولیه) */
         .card-details {
             max-height: 0;
             overflow: hidden;
@@ -142,7 +139,7 @@
         }
 
         .card-details.expanded {
-            max-height: 100px; /* فضای کافی برای نمایش دیتای فولد شده */
+            max-height: 100px;
             border-top: 1px solid rgba(255, 255, 255, 0.05);
             margin-top: 12px;
             padding-top: 12px;
@@ -174,7 +171,6 @@
             font-family: monospace;
         }
 
-        /* دکمه باز و بسته کردن فولد */
         .toggle-details-btn {
             font-size: 0.65rem;
             font-weight: 700;
@@ -185,8 +181,8 @@
             display: flex;
             align-items: center;
             gap: 4px;
-            margin-top: 8px;
-            margin-left: auto; /* انتقال دکمه به سمت راست انتهای کارت */
+            margin-top: 12px;
+            margin-left: auto;
         }
 
         .toggle-details-btn:focus {
@@ -248,7 +244,7 @@
     <div class="asset-card">
         <div class="card-main">
             <div class="asset-info">
-                <div class="asset-icon">Exchange Rates💶</div>
+                <div class="asset-icon">💶</div>
                 <div>
                     <span class="asset-title">Euro</span>
                     <span class="asset-subtitle">EUR / IRR</span>
@@ -345,7 +341,6 @@
 <script src="https://api.tgju.org/v1/widget/v2" defer></script>
 
 <script>
-    // تابع مدیریت فولد و اکسپند کردن اطلاعات فرعی
     function toggleFold(elementId, btn) {
         const detailBlock = document.getElementById(elementId);
         if (detailBlock.classList.contains('expanded')) {
