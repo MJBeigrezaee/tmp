@@ -3,81 +3,247 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>محاسبه‌گر زنده طلا و یورو</title>
+    <title>داشبورد زنده نرخ طلا و یورو</title>
     <style>
-        body { font-family: Tahoma, Arial, sans-serif; background-color: #f4f6f9; color: #333; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
-        .container { background: #ffffff; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); max-width: 450px; width: 100%; text-align: center; }
-        h2 { color: #2c3e50; margin-bottom: 25px; font-size: 1.4rem; }
-        .widget-box { background: #fafafa; border: 1px solid #e0e0e0; border-radius: 8px; padding: 15px; margin-bottom: 15px; min-height: 60px; }
-        .result-box { background: #e8f5e9; border: 2px dashed #4caf50; border-radius: 8px; padding: 20px; margin-top: 25px; }
-        .result-title { font-size: 1.1rem; color: #2e7d32; font-weight: bold; margin-bottom: 8px; }
-        .result-value { font-size: 1.6rem; color: #1b5e20; font-weight: bold; font-family: monospace; }
+        /* تعریف فونت استاندارد و زیبای همگانی */
+        @import url('https://v1.fontapi.ir/css/Vazir');
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Vazir', Tahoma, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: #f8fafc;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        /* کارت مدرن شیشه‌ای */
+        .dashboard-card {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 35px;
+            width: 100%;
+            max-width: 480px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            text-align: center;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 30px;
+            color: #38bdf8;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .price-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 18px 20px;
+            border-radius: 16px;
+            margin-bottom: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .price-row:hover {
+            border-color: rgba(56, 189, 248, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1rem;
+            color: #94a3b8;
+        }
+
+        .value {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #f8fafc;
+            font-family: monospace, 'Vazir';
+        }
+
+        /* باکس متمایز برای نسبت طلا به یورو */
+        .ratio-box {
+            background: linear-gradient(135deg, rgba(14, 165, 233, 0.2) 0%, rgba(56, 189, 248, 0.05) 100%);
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            border-radius: 20px;
+            padding: 25px;
+            margin-top: 25px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ratio-title {
+            font-size: 0.95rem;
+            color: #38bdf8;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .ratio-value {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: #38bdf8;
+            font-family: monospace;
+            text-shadow: 0 0 15px rgba(56, 189, 248, 0.4);
+        }
+
+        .currency-badge {
+            font-size: 1rem;
+            font-weight: 500;
+            margin-right: 5px;
+        }
+
+        .update-time {
+            font-size: 0.8rem;
+            color: #64748b;
+            margin-top: 25px;
+        }
+
+        /* انیمیشن لودینگ در حالت انتظار */
+        .loading {
+            color: #64748b;
+            font-size: 0.9rem;
+            animation: pulse 1.5s infinite ease-in-out;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
+        }
+
+        /* 🔴 بخش جادویی: مخفی کردن کامل ویجت‌های TGJU از دید کاربر */
+        #tgju-hidden-widgets {
+            display: none !important;
+            visibility: hidden !important;
+            height: 0 !important;
+            width: 0 !important;
+            overflow: hidden !important;
+        }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <h2>📊 نرخ لحظه‌ای بازار آزاد (TGJU)</h2>
+<div class="dashboard-card">
+    <h2>
+        <span>📊</span>
+        داشبورد محاسباتی نرخ ارز و طلا
+    </h2>
 
-    <div class="widget-box">
-        <span style="font-weight: bold; display:block; margin-bottom: 5px;">🔸 طلای ۱۸ عیار (هر گرم):</span>
-        <tgju type="ticker-single" items="137121" columns="dot" token="webservice"></tgju>
+    <!-- ردیف طلا -->
+    <div class="price-row">
+        <div class="label">
+            <span>🔸</span>
+            <span>طلای ۱۸ عیار (گرم)</span>
+        </div>
+        <div id="display-gold" class="value loading">در حال دریافت...</div>
     </div>
 
-    <div class="widget-box">
-        <span style="font-weight: bold; display:block; margin-bottom: 5px;">💶 یورو بازار آزاد:</span>
-        <tgju type="ticker-single" items="137205" columns="dot" token="webservice"></tgju>
+    <!-- ردیف یورو -->
+    <div class="price-row">
+        <div class="label">
+            <span>💶</span>
+            <span>یورو بازار آزاد</span>
+        </div>
+        <div id="display-euro" class="value loading">در حال دریافت...</div>
     </div>
 
-    <div class="result-box">
-        <div class="result-title">✨ قیمت هر گرم طلا به یورو:</div>
-        <div id="final-ratio" class="result-value">در حال محاسبه...</div>
+    <!-- باکس نسبت اختصاصی شما -->
+    <div class="ratio-box">
+        <div class="ratio-title">✨ نسبت هر گرم طلا به یورو</div>
+        <div id="display-ratio" class="ratio-value loading">--.--</div>
     </div>
+
+    <!-- زمان بروزرسانی -->
+    <div id="display-time" class="update-time">در انتظار سینک با بازار آزاد تهران...</div>
 </div>
 
-<div style="display:none;">
-    <span id="bot-gold">0</span>
-    <span id="bot-euro">0</span>
+
+<!-- 🔴 این همان باکسی است که ویجت‌ها درونش رندر می‌شوند ولی هیچ‌کس آن را نمی‌بیند -->
+<div id="tgju-hidden-widgets">
+    <tgju type="ticker-single" items="137121" columns="dot" token="webservice"></tgju>
+    <tgju type="ticker-single" items="137205" columns="dot" token="webservice"></tgju>
 </div>
 
+<!-- بارگزاری اسکریپت اصلی TGJU -->
 <script src="https://api.tgju.org/v1/widget/v2" defer></script>
 
 <script>
-    function calculateRatio() {
+    function updateCustomDashboard() {
         try {
-            // اصلاح کلاس بر اساس ساختار واقعی ویجت رندر شده
-            const priceElements = document.querySelectorAll('.tgju-widget-current-price');
+            // پیدا کردن المان‌های قیمت رندر شده در باکس مخفی
+            const hiddenPrices = document.querySelectorAll('#tgju-hidden-widgets .tgju-widget-current-price');
             
-            if (priceElements.length >= 2) {
-                const goldText = priceElements[0].innerText || priceElements[0].textContent;
-                const eurText = priceElements[1].innerText || priceElements[1].textContent;
+            if (hiddenPrices.length >= 2) {
+                const rawGold = hiddenPrices[0].innerText || hiddenPrices[0].textContent;
+                const rawEuro = hiddenPrices[1].innerText || hiddenPrices[1].textContent;
                 
-                // تمیز کردن کاما و متن‌های احتمالی فارسی
-                const goldPrice = parseFloat(goldText.replace(/,/g, '').trim());
-                const eurPrice = parseFloat(eurText.replace(/,/g, '').trim());
+                // پاکسازی کاماها برای محاسبات ریاضی
+                const goldNum = parseFloat(rawGold.replace(/,/g, '').trim());
+                const euroNum = parseFloat(rawEuro.replace(/,/g, '').trim());
 
-                if (goldPrice > 0 && eurPrice > 0) {
-                    const ratio = (goldPrice / eurPrice).toFixed(2);
-                    document.getElementById('final-ratio').innerText = ratio + " EUR";
+                if (goldNum > 0 && euroNum > 0) {
+                    // محاسبه نسبت طلا به یورو
+                    const ratio = (goldNum / euroNum).toFixed(2);
                     
-                    // ذخیره در المان‌های مخفی برای استفاده ربات
-                    document.getElementById('bot-gold').innerText = goldPrice;
-                    document.getElementById('bot-euro').innerText = eurPrice;
+                    // تزریق دیتا به پلتفرم قشنگ و مدرن خودمان
+                    const goldContainer = document.getElementById('display-gold');
+                    const euroContainer = document.getElementById('display-euro');
+                    const ratioContainer = document.getElementById('display-ratio');
+                    
+                    // حذف کلاس لودینگ
+                    goldContainer.classList.remove('loading');
+                    euroContainer.classList.remove('loading');
+                    ratioContainer.classList.remove('loading');
+                    
+                    // نمایش با فرمت شیک ریال
+                    goldContainer.innerText = parseInt(goldNum).toLocaleString() + " ریال";
+                    euroContainer.innerText = parseInt(euroNum).toLocaleString() + " ریال";
+                    
+                    // نمایش نسبت با ابهت بالا!
+                    ratioContainer.innerHTML = ratio + '<span class="currency-badge">EUR</span>';
+                    
+                    // ثبت دقیق زمان سیستم به شمسی/تهران
+                    const now = new Date().toLocaleString("fa-IR", { timeZone: "Asia/Tehran" });
+                    document.getElementById('display-time').innerText = `آخرین همگام‌سازی زنده: ${now} (به وقت تهران)`;
+                    
+                    // متوقف کردن حلقه چک کردن چون دیتا با موفقیت گرفته شد
+                    clearInterval(widgetWatcher);
                 }
             }
-        } catch (e) {
-            console.log("Error in calculation");
+        } catch (error) {
+            console.log("رندر داخلی در انتظار تغییرات پکیج...");
         }
     }
 
-    // بررسی مداوم تا زمان لود دیتای ویجت
-    const intervalCheck = setInterval(() => {
-        const elements = document.querySelectorAll('.tgju-widget-current-price');
+    // چک کردن مداوم صفحه در پشت صحنه (هر ۵۰۰ میلی‌ثانیه) تا وقتی ویجت مخفی لود شود
+    const widgetWatcher = setInterval(() => {
+        const elements = document.querySelectorAll('#tgju-hidden-widgets .tgju-widget-current-price');
         if (elements.length >= 2 && elements[0].innerText !== "") {
-            calculateRatio();
-            clearInterval(intervalCheck);
+            updateCustomDashboard();
         }
     }, 500);
 </script>
+
 </body>
 </html>
