@@ -77,12 +77,12 @@
 <div class="container">
     <h2>📊 نرخ لحظه‌ای بازار آزاد (TGJU)</h2>
 
-    <div class="widget-box">
+    <div class="widget-box" id="gold-section">
         <span style="font-weight: bold; display:block; margin-bottom: 5px;">🔸 طلای ۱۸ عیار (هر گرم):</span>
         <tgju type="ticker-single" items="137121" columns="dot" token="webservice"></tgju>
     </div>
 
-    <div class="widget-box">
+    <div class="widget-box" id="eur-section">
         <span style="font-weight: bold; display:block; margin-bottom: 5px;">💶 یورو بازار آزاد:</span>
         <tgju type="ticker-single" items="137205" columns="dot" token="webservice"></tgju>
     </div>
@@ -100,34 +100,44 @@
 <script>
     function calculateRatio() {
         try {
-            // پیدا کردن المان‌هایی که ویجت TGJU قیمت را درون آن‌ها تزریق می‌کند
-            const tgjuElements = document.querySelectorAll('span[data-col="info.last_trade.text"]');
+            // هدف‌گیری مستقیم کلاس‌های قیمت رندر شده توسط ویجت
+            const priceElements = document.querySelectorAll('.tgju-widget-current-price');
             
-            if (tgjuElements.length >= 2) {
-                // استخراج متن قیمت‌ها و حذف کاما
-                const goldText = tgjuElements[0].innerText || tgjuElements[0].textContent;
-                const eurText = tgjuElements[1].innerText || tgjuElements[1].textContent;
+            if (priceElements.length >= 2) {
+                // المان اول طلا و المان دوم یورو است
+                const goldText = priceElements[0].innerText || priceElements[0].textContent;
+                const eurText = priceElements[1].innerText || priceElements[1].textContent;
                 
-                const goldPrice = parseFloat(goldText.replace(/,/g, ''));
-                const eurPrice = parseFloat(eurText.replace(/,/g, ''));
+                // پاک‌سازی رشته‌ها و تبدیل به عدد شناور
+                const goldPrice = parseFloat(goldText.replace(/,/g, '').replace(/[آ-ی]/g, '').trim());
+                const eurPrice = parseFloat(eurText.replace(/,/g, '').replace(/[آ-ی]/g, '').trim());
 
                 if (goldPrice > 0 && eurPrice > 0) {
                     const ratio = (goldPrice / eurPrice).toFixed(2);
                     document.getElementById('final-ratio').innerText = ratio + " EUR";
                 } else {
-                    document.getElementById('final-ratio').innerText = "خطا در ارقام";
+                    document.getElementById('final-ratio').innerText = "خطا در پردازش ارقام";
                 }
             } else {
-                document.getElementById('final-ratio').innerText = "انتظار برای بارگذاری دیتای TGJU...";
+                document.getElementById('final-ratio').innerText = "در حال دریافت دیتا از سرور مرکزی...";
             }
         } catch (e) {
-            document.getElementById('final-ratio').innerText = "خطا در محاسبه";
+            document.getElementById('final-ratio').innerText = "خطا در محاسبات داخلی";
         }
     }
 
-    // اجرای خودکار محاسبه ۲ ثانیه پس از لود شدن صفحه تا ویجت‌ها وقت داشته باشند دیتایشان را دریافت کنند
+    // بررسی دوره‌ای تا به محض لود شدن دیتای سرور، محاسبات انجام شود
+    const checkInterval = setInterval(() => {
+        const elements = document.querySelectorAll('.tgju-widget-current-price');
+        if (elements.length >= 2 && elements[0].innerText !== "") {
+            calculateRatio();
+            clearInterval(checkInterval); // متوقف کردن بررسی بعد از اولین محاسبه موفق
+        }
+    }, 500);
+
+    // زمان‌بندی زاپاس برای اطمینان نهایی
     window.addEventListener('load', () => {
-        setTimeout(calculateRatio, 2500);
+        setTimeout(calculateRatio, 3000);
     });
 </script>
 
