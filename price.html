@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>محاسبه‌گر زنده طلا و یورو</title>
+    <style>
+        body {
+            font-family: Tahoma, Arial, sans-serif;
+            background-color: #f4f6f9;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            max-width: 450px;
+            width: 100%;
+            text-align: center;
+        }
+        h2 {
+            color: #2c3e50;
+            margin-bottom: 25px;
+            font-size: 1.4rem;
+        }
+        .widget-box {
+            background: #fafafa;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            min-height: 60px;
+        }
+        .result-box {
+            background: #e8f5e9;
+            border: 2px dashed #4caf50;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 25px;
+        }
+        .result-title {
+            font-size: 1.1rem;
+            color: #2e7d32;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        .result-value {
+            font-size: 1.6rem;
+            color: #1b5e20;
+            font-weight: bold;
+            font-family: monospace;
+        }
+        button {
+            background-color: #2196f3;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: background 0.2s;
+        }
+        button:hover {
+            background-color: #1e88e5;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>📊 نرخ لحظه‌ای بازار آزاد (TGJU)</h2>
+
+    <div class="widget-box">
+        <span style="font-weight: bold; display:block; margin-bottom: 5px;">🔸 طلای ۱۸ عیار (هر گرم):</span>
+        <tgju type="ticker-single" items="137121" columns="dot" token="webservice"></tgju>
+    </div>
+
+    <div class="widget-box">
+        <span style="font-weight: bold; display:block; margin-bottom: 5px;">💶 یورو بازار آزاد:</span>
+        <tgju type="ticker-single" items="137205" columns="dot" token="webservice"></tgju>
+    </div>
+
+    <div class="result-box">
+        <div class="result-title">✨ قیمت هر گرم طلا به یورو:</div>
+        <div id="final-ratio" class="result-value">در حال محاسبه...</div>
+    </div>
+
+    <button onclick="calculateRatio()">🔄 محاسبه مجدد نسبت</button>
+</div>
+
+<script src="https://api.tgju.org/v1/widget/v2" defer></script>
+
+<script>
+    function calculateRatio() {
+        try {
+            // پیدا کردن المان‌هایی که ویجت TGJU قیمت را درون آن‌ها تزریق می‌کند
+            const tgjuElements = document.querySelectorAll('span[data-col="info.last_trade.text"]');
+            
+            if (tgjuElements.length >= 2) {
+                // استخراج متن قیمت‌ها و حذف کاما
+                const goldText = tgjuElements[0].innerText || tgjuElements[0].textContent;
+                const eurText = tgjuElements[1].innerText || tgjuElements[1].textContent;
+                
+                const goldPrice = parseFloat(goldText.replace(/,/g, ''));
+                const eurPrice = parseFloat(eurText.replace(/,/g, ''));
+
+                if (goldPrice > 0 && eurPrice > 0) {
+                    const ratio = (goldPrice / eurPrice).toFixed(2);
+                    document.getElementById('final-ratio').innerText = ratio + " EUR";
+                } else {
+                    document.getElementById('final-ratio').innerText = "خطا در ارقام";
+                }
+            } else {
+                document.getElementById('final-ratio').innerText = "انتظار برای بارگذاری دیتای TGJU...";
+            }
+        } catch (e) {
+            document.getElementById('final-ratio').innerText = "خطا در محاسبه";
+        }
+    }
+
+    // اجرای خودکار محاسبه ۲ ثانیه پس از لود شدن صفحه تا ویجت‌ها وقت داشته باشند دیتایشان را دریافت کنند
+    window.addEventListener('load', () => {
+        setTimeout(calculateRatio, 2500);
+    });
+</script>
+
+</body>
+</html>
