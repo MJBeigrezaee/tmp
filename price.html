@@ -129,7 +129,6 @@
             font-size: 1.1rem;
         }
 
-        /* استایل‌های اختصاصی پوزیشن‌های مثبت و منفی بازار */
         .up-trend {
             color: #10b981 !important;
             font-weight: 600;
@@ -144,7 +143,6 @@
             color: #9ca3af;
         }
 
-        /* کاستومایز کردن سطر رادیوها (نسبت‌های طلایی شما) */
         .premium-ratio-row {
             background: linear-gradient(90deg, rgba(56, 189, 248, 0.03) 0%, rgba(0, 0, 0, 0) 100%);
         }
@@ -168,7 +166,6 @@
             50% { opacity: 1; }
         }
 
-        /* غیب کردن کامل ساختار سنتی جدول اصلی وب‌سایت تهران */
         #tgju-hidden-wrapper {
             display: none !important;
             visibility: hidden !important;
@@ -264,7 +261,6 @@
             <tr class="premium-ratio-row">
                 <td>
                     <div class="asset-info">
-                        <div class="asset-info">
                         <div class="asset-icon">⚙️</div>
                         <div>
                             <span class="asset-title" style="color: #38bdf8;">Gold / DKK</span>
@@ -293,7 +289,6 @@
 <script src="https://api.tgju.org/v1/widget/v2" defer></script>
 
 <script>
-    // پاکسازی امن متون فارسی به ارقام خالص انگلیسی برای جلوگیری از خطای NaN
     function cleanAndParse(inputStr) {
         if (!inputStr) return 0;
         const faDigits = ['۰','۱','۲','۳','۴','۵','۶','۷','۸','۹'];
@@ -306,7 +301,6 @@
 
     function renderEngine() {
         try {
-            // واکشی ردیف‌های رندر شده در ویجت مخفی
             const rawRows = document.querySelectorAll('#tgju-hidden-wrapper table tbody tr');
             if (rawRows.length < 3) return;
 
@@ -331,31 +325,30 @@
 
             if (goldData.currentPrice > 0 && euroData.currentPrice > 0 && dkkData.currentPrice > 0) {
                 
-                // از بین بردن حالت انیمیشن لودینگ تگ‌ها
                 document.querySelectorAll('.loading-pulse').forEach(item => item.classList.remove('loading-pulse'));
 
-                // ۱. تنظیم دیتای زنده طلا
+                // 1. Gold
                 document.getElementById('row1-p').innerText = goldData.currentPrice.toLocaleString();
                 document.getElementById('row1-c').innerText = goldData.changeString;
                 document.getElementById('row1-c').className = goldData.changeFloat >= 0 ? 'up-trend' : 'down-trend';
                 document.getElementById('row1-l').innerText = goldData.lowest.toLocaleString();
                 document.getElementById('row1-h').innerText = goldData.highest.toLocaleString();
 
-                // ۲. تنظیم دیتای زنده یورو
+                // 2. Euro
                 document.getElementById('row2-p').innerText = euroData.currentPrice.toLocaleString();
                 document.getElementById('row2-c').innerText = euroData.changeString;
                 document.getElementById('row2-c').className = euroData.changeFloat >= 0 ? 'up-trend' : 'down-trend';
                 document.getElementById('row2-l').innerText = euroData.lowest.toLocaleString();
                 document.getElementById('row2-h').innerText = euroData.highest.toLocaleString();
 
-                // ۳. تنظیم دیتای زنده کرون دانمارک
+                // 3. DKK
                 document.getElementById('row3-p').innerText = dkkData.currentPrice.toLocaleString();
                 document.getElementById('row3-c').innerText = dkkData.changeString;
                 document.getElementById('row3-c').className = dkkData.changeFloat >= 0 ? 'up-trend' : 'down-trend';
                 document.getElementById('row3-l').innerText = dkkData.lowest.toLocaleString();
                 document.getElementById('row3-h').innerText = dkkData.highest.toLocaleString();
 
-                // ۴. پردازش دقیق محاسبات نسبت طلا به یورو
+                // 4. Gold / EUR Ratio
                 const geRatio = (goldData.currentPrice / euroData.currentPrice).toFixed(2);
                 const geLow = (goldData.lowest / euroData.highest).toFixed(2);
                 const geHigh = (goldData.highest / euroData.lowest).toFixed(2);
@@ -367,7 +360,7 @@
                 document.getElementById('ratio-ge-chg').innerText = (geChange >= 0 ? '+' : '') + geChange + '%';
                 document.getElementById('ratio-ge-chg').className = geChange >= 0 ? 'up-trend' : 'down-trend';
 
-                // ۵. پردازش دقیق محاسبات نسبت طلا به کرون دانمارک
+                // 5. Gold / DKK Ratio
                 const gdRatio = (goldData.currentPrice / dkkData.currentPrice).toFixed(2);
                 const gdLow = (goldData.lowest / dkkData.highest).toFixed(2);
                 const gdHigh = (goldData.highest / dkkData.lowest).toFixed(2);
@@ -379,16 +372,14 @@
                 document.getElementById('ratio-gd-chg').innerText = (gdChange >= 0 ? '+' : '') + gdChange + '%';
                 document.getElementById('ratio-gd-chg').className = gdChange >= 0 ? 'up-trend' : 'down-trend';
 
-                // آپدیت تایمر دیجیتال داشبورد به ساعت بین‌المللی
                 const timeOptions = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
                 document.getElementById('runtime-clock').innerText = `Live: ${new Date().toLocaleTimeString('en-US', timeOptions)}`;
             }
         } catch (err) {
-            console.log("Syncing multi-asset matrix stream...");
+            console.log("Syncing matrix...");
         }
     }
 
-    // بررسی مداوم ساختار درختی DOM برای مانیتور لحظه‌ای تغییرات ویجت اصلی
     setInterval(() => {
         const checkRows = document.querySelectorAll('#tgju-hidden-wrapper table tbody tr');
         if (checkRows.length >= 3) {
