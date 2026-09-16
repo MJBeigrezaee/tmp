@@ -318,6 +318,26 @@
       document.getElementById('clock').textContent = `${h}:${m}:${s}`;
     }
 
+    // Calculate remaining time until End date (end of that day)
+    function updateExpires() {
+      const endDateText = document.getElementById('end-date').textContent.trim(); // e.g. "14 October 2026"
+      const endDate = new Date(endDateText + ' 23:59:59'); // expire at end of the day
+
+      const now = new Date();
+      let diff = endDate - now;
+
+      if (diff < 0) diff = 0; // already expired
+
+      const totalMinutes = Math.floor(diff / 60000);
+      const days = Math.floor(totalMinutes / (60 * 24));
+      const hours = Math.floor((totalMinutes % (60 * 24)) / 60);
+      const minutes = totalMinutes % 60;
+
+      document.getElementById('exp-days').textContent = days;
+      document.getElementById('exp-hours').textContent = hours;
+      document.getElementById('exp-mins').textContent = minutes;
+    }
+
     // Create QR instance once
     var qrcode = new QRCode(document.getElementById("qrcode"), {
       width: 156,
@@ -337,9 +357,11 @@
 
     // Initial + every second
     updateClock();
+    updateExpires();
     generateRandomQR();
     setInterval(() => {
       updateClock();
+      updateExpires();
       generateRandomQR();
     }, 1000);
   </script>
