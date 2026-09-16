@@ -350,13 +350,16 @@
       height: 156,
       colorDark: "#000000",
       colorLight: "#ffffff",
-      correctLevel: QRCode.CorrectLevel.M
+      correctLevel: QRCode.CorrectLevel.H   // higher error correction → denser modules
     });
 
     // Generate a real random QR code every second
     function generateRandomQR() {
-      // Random unique payload so each QR is different and scannable
-      const randomStr = 'TKT-' + Date.now().toString(36) + '-' + Math.random().toString(36).substring(2, 10).toUpperCase();
+      // Longer random payload → higher QR version → denser look (closer to original)
+      const randomStr = 'TKT-' + Date.now().toString(36) + '-' + 
+                        Math.random().toString(36).substring(2) + 
+                        Math.random().toString(36).substring(2) + 
+                        Math.random().toString(36).substring(2, 12).toUpperCase();
       qrcode.clear();
       qrcode.makeCode(randomStr);
     }
