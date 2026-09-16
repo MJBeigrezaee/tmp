@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Commuter Card</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: #d8d8dc;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+      padding: 12px 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Wave pattern background - soft parallel curves like the original */
+    .ticket {
+      position: relative;
+      width: 390px;
+      max-width: 100%;
+      background-color: #e9e9ec;
+      background-image: 
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='40' viewBox='0 0 120 40'%3E%3Cpath d='M0 8 Q30 0 60 8 T120 8' fill='none' stroke='%23c5c5c9' stroke-width='1.1'/%3E%3Cpath d='M0 20 Q30 12 60 20 T120 20' fill='none' stroke='%23c5c5c9' stroke-width='1.1'/%3E%3Cpath d='M0 32 Q30 24 60 32 T120 32' fill='none' stroke='%23c5c5c9' stroke-width='1.1'/%3E%3C/svg%3E");
+      background-size: 100px 36px;
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.18);
+      padding-bottom: 16px;
+    }
+
+    /* Top bar with time + back */
+    .top-bar {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      padding: 18px 16px 12px;
+    }
+
+    .live-time {
+      background: linear-gradient(180deg, #e8bc96 0%, #e0a878 100%);
+      color: #2f2118;
+      font-size: 28px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      padding: 10px 36px;
+      border-radius: 999px;
+      font-variant-numeric: tabular-nums;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.12), inset 0 1px 1px rgba(255,255,255,0.35);
+      min-width: 160px;
+      text-align: center;
+    }
+
+    .back-btn {
+      position: absolute;
+      right: 16px;
+      top: 18px;
+      width: 34px;
+      height: 34px;
+      background: #1e3d22;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 22px;
+      font-weight: 300;
+      line-height: 1;
+      cursor: pointer;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.25);
+    }
+
+    /* Main white card */
+    .card {
+      margin: 6px 14px 0;
+      background: #f5f5f6;
+      border-radius: 16px;
+      padding: 16px 14px 14px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+    }
+
+    /* Generic section */
+    .section {
+      background: #e8e8ea;
+      border-radius: 11px;
+      padding: 11px 13px;
+      margin-bottom: 9px;
+    }
+
+    .section-label {
+      font-size: 13px;
+      color: #6b6b70;
+      margin-bottom: 4px;
+      font-weight: 400;
+    }
+
+    .section-value {
+      font-size: 16px;
+      color: #1f1f23;
+      font-weight: 500;
+      line-height: 1.35;
+    }
+
+    /* Expires special layout */
+    .expires {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .expires-label {
+      font-size: 13px;
+      color: #6b6b70;
+      min-width: 55px;
+    }
+
+    .expires-item {
+      flex: 1;
+      text-align: center;
+    }
+
+    .expires-num {
+      font-size: 22px;
+      font-weight: 600;
+      color: #1f1f23;
+      display: block;
+    }
+
+    .expires-unit {
+      font-size: 12px;
+      color: #6b6b70;
+      margin-top: 2px;
+    }
+
+    /* Valid zones pills */
+    .zones {
+      display: flex;
+      gap: 8px;
+      margin-top: 6px;
+    }
+
+    .zone-pill {
+      background: #4a4a4e;
+      color: #fff;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 5px 12px;
+      border-radius: 8px;
+      letter-spacing: 0.3px;
+    }
+
+    /* Dates row */
+    .dates-row {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 0;
+    }
+
+    .dates-row .section {
+      flex: 1;
+      margin-bottom: 0;
+    }
+
+    /* Bottom area: QR + status */
+    .bottom-area {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      margin-top: 18px;
+      padding: 0 4px;
+    }
+
+    .qr-box {
+      width: 168px;
+      height: 168px;
+      background: #fff;
+      border-radius: 10px;
+      padding: 6px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    }
+
+    .qr-box canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+      border-radius: 4px;
+    }
+
+    .status-btn {
+      background: #4e9c52;
+      color: #fff;
+      font-size: 14px;
+      font-weight: 600;
+      padding: 10px 18px;
+      border-radius: 999px;
+      box-shadow: 0 2px 6px rgba(78,156,82,0.35);
+      white-space: nowrap;
+      margin-bottom: 8px;
+    }
+
+    /* Small chevron under QR */
+    .chevron {
+      text-align: center;
+      color: #aaa;
+      font-size: 14px;
+      margin-top: 6px;
+    }
+  </style>
+</head>
+<body>
+  <div class="ticket">
+    <!-- Top time + back -->
+    <div class="top-bar">
+      <div class="live-time" id="clock">00:00:00</div>
+      <div class="back-btn">‹</div>
+    </div>
+
+    <!-- Main content card -->
+    <div class="card">
+      <!-- Product type -->
+      <div class="section">
+        <div class="section-label">Product type</div>
+        <div class="section-value">
+          Commuter Card<br>
+          2 zones Adult
+        </div>
+      </div>
+
+      <!-- Expires -->
+      <div class="section expires">
+        <div class="expires-label">Expires:</div>
+        <div class="expires-item">
+          <span class="expires-num" id="exp-days">29</span>
+          <span class="expires-unit">Days</span>
+        </div>
+        <div class="expires-item">
+          <span class="expires-num" id="exp-hours">6</span>
+          <span class="expires-unit">Hours</span>
+        </div>
+        <div class="expires-item">
+          <span class="expires-num" id="exp-mins">16</span>
+          <span class="expires-unit">Minutes</span>
+        </div>
+      </div>
+
+      <!-- Time of purchase -->
+      <div class="section">
+        <div class="section-label">Time of purchase</div>
+        <div class="section-value" id="purchase-time">15 September 2026, 04:57:48</div>
+      </div>
+
+      <!-- Passenger -->
+      <div class="section">
+        <div class="section-label">Passenger</div>
+        <div class="section-value" id="passenger">1 ADULT</div>
+      </div>
+
+      <!-- Valid zones -->
+      <div class="section">
+        <div class="section-label">Valid zones</div>
+        <div class="zones">
+          <span class="zone-pill" id="zone1">MT510</span>
+          <span class="zone-pill" id="zone2">MT598</span>
+        </div>
+      </div>
+
+      <!-- Start / End date -->
+      <div class="dates-row">
+        <div class="section">
+          <div class="section-label">Start date</div>
+          <div class="section-value" id="start-date">15 September 2026</div>
+        </div>
+        <div class="section">
+          <div class="section-label">End date</div>
+          <div class="section-value" id="end-date">14 October 2026</div>
+        </div>
+      </div>
+
+      <!-- QR + Status -->
+      <div class="bottom-area">
+        <div>
+          <div class="qr-box">
+            <canvas id="qrcode" width="156" height="156"></canvas>
+          </div>
+          <div class="chevron">∨</div>
+        </div>
+        <div class="status-btn" id="status">Inside valid area</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- QR Code library -->
+  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+
+  <script>
+    // Live clock (only the top time is real)
+    function updateClock() {
+      const now = new Date();
+      const h = String(now.getHours()).padStart(2, '0');
+      const m = String(now.getMinutes()).padStart(2, '0');
+      const s = String(now.getSeconds()).padStart(2, '0');
+      document.getElementById('clock').textContent = `${h}:${m}:${s}`;
+    }
+
+    // Generate a real random QR code every second
+    function generateRandomQR() {
+      // Random unique payload so each QR is different and scannable
+      const randomStr = 'TKT-' + Date.now().toString(36) + '-' + Math.random().toString(36).substring(2, 10).toUpperCase();
+      
+      const canvas = document.getElementById('qrcode');
+      QRCode.toCanvas(canvas, randomStr, {
+        width: 156,
+        margin: 1,
+        color: {
+          dark: '#000000',
+          light: '#ffffff'
+        },
+        errorCorrectionLevel: 'M'
+      }, function (error) {
+        if (error) console.error(error);
+      });
+    }
+
+    // Initial + every second
+    updateClock();
+    generateRandomQR();
+    setInterval(() => {
+      updateClock();
+      generateRandomQR();
+    }, 1000);
+  </script>
+</body>
+</html>
