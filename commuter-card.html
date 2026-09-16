@@ -17,16 +17,20 @@
       justify-content: center;
       align-items: flex-start;
       min-height: 100vh;
-      padding: 12px 0;
+      min-height: 100dvh;
+      padding: 8px 0;
+      margin: 0;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
       -webkit-font-smoothing: antialiased;
+      -webkit-text-size-adjust: 100%;
+      text-size-adjust: 100%;
     }
 
     /* Wave pattern background - soft parallel curves like the original */
     .ticket {
       position: relative;
-      width: 390px;
-      max-width: 100%;
+      width: 100%;
+      max-width: 390px;
       background-color: #e9e9ec;
       background-image: 
         url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='40' viewBox='0 0 120 40'%3E%3Cpath d='M0 8 Q30 0 60 8 T120 8' fill='none' stroke='%23c5c5c9' stroke-width='1.1'/%3E%3Cpath d='M0 20 Q30 12 60 20 T120 20' fill='none' stroke='%23c5c5c9' stroke-width='1.1'/%3E%3Cpath d='M0 32 Q30 24 60 32 T120 32' fill='none' stroke='%23c5c5c9' stroke-width='1.1'/%3E%3C/svg%3E");
@@ -35,6 +39,7 @@
       overflow: hidden;
       box-shadow: 0 8px 30px rgba(0,0,0,0.18);
       padding-bottom: 16px;
+      margin: 0 6px;
     }
 
     /* Top bar with time + back */
