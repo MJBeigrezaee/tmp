@@ -1,5 +1,7 @@
-const CACHE_NAME = 'commuter-card-v1';
+const CACHE_NAME = 'commuter-card-v2';
 const urlsToCache = [
+  './',
+  './index.html',
   './commuter-card.html',
   './qrcode.min.js',
   './manifest.json',
@@ -7,7 +9,6 @@ const urlsToCache = [
   './icons/icon-512.png'
 ];
 
-// Install - cache files
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME)
@@ -16,7 +17,6 @@ self.addEventListener('install', (event) => {
   );
 });
 
-// Activate - clean old caches
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((cacheNames) => {
@@ -31,12 +31,9 @@ self.addEventListener('activate', (event) => {
   );
 });
 
-// Fetch - serve from cache first, fallback to network
 self.addEventListener('fetch', (event) => {
   event.respondWith(
     caches.match(event.request)
-      .then((response) => {
-        return response || fetch(event.request);
-      })
+      .then((response) => response || fetch(event.request))
   );
 });
