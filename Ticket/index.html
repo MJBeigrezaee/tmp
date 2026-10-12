@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <meta name="theme-color" content="#e0a878">
+  <meta name="theme-color" content="#00c853">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="Commuter Card">
@@ -18,15 +18,15 @@
     }
 
     body {
-      background: #d8d8dc;
+      background: #e8e8e8;
       display: flex;
       justify-content: center;
       align-items: flex-start;
       min-height: 100vh;
       min-height: 100dvh;
-      padding: 8px 0;
+      padding: 0;
       margin: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
       text-rendering: optimizeLegibility;
@@ -34,133 +34,157 @@
       text-size-adjust: 100%;
     }
 
-    /* Wave pattern background - soft parallel curves like the original */
-    .ticket {
-      position: relative;
+    .app {
       width: 100%;
-      max-width: 390px;
-      background-color: #e9e9ec;
-      background-image: 
-        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='40' viewBox='0 0 120 40'%3E%3Cpath d='M0 8 Q30 0 60 8 T120 8' fill='none' stroke='%23c5c5c9' stroke-width='1.1'/%3E%3Cpath d='M0 20 Q30 12 60 20 T120 20' fill='none' stroke='%23c5c5c9' stroke-width='1.1'/%3E%3Cpath d='M0 32 Q30 24 60 32 T120 32' fill='none' stroke='%23c5c5c9' stroke-width='1.1'/%3E%3C/svg%3E");
-      background-size: 100px 36px;
-      border-radius: 18px;
-      overflow: hidden;
-      box-shadow: 0 8px 30px rgba(0,0,0,0.18);
-      padding-bottom: 16px;
-      margin: 0 6px;
-    }
-
-    /* Top bar with time + back */
-    .top-bar {
-      display: flex;
-      justify-content: center;
-      align-items: center;
+      max-width: 430px;
+      min-height: 100vh;
+      min-height: 100dvh;
+      background: #f0f0f0;
       position: relative;
-      padding: 18px 16px 12px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
     }
 
-    .live-time {
-      background: linear-gradient(180deg, #e8bc96 0%, #e0a878 100%);
-      color: #2f2118;
-      font-size: 29px;
-      font-weight: 600;
-      letter-spacing: 0.8px;
-      padding: 11px 38px;
-      border-radius: 999px;
-      font-variant-numeric: tabular-nums;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.12), inset 0 1px 1px rgba(255,255,255,0.35);
-      min-width: 168px;
-      text-align: center;
+    /* Header */
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 16px 8px;
+      background: transparent;
+      position: relative;
+      z-index: 2;
     }
 
     .back-btn {
-      position: absolute;
-      right: 16px;
-      top: 18px;
-      width: 34px;
-      height: 34px;
-      background: #1e3d22;
+      width: 36px;
+      height: 36px;
+      background: #1b5e20;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
       color: #fff;
-      font-size: 22px;
+      font-size: 20px;
       font-weight: 300;
-      line-height: 1;
-      cursor: pointer;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.25);
     }
 
-    /* Main white card */
-    .card {
-      margin: 6px 14px 0;
-      background: #f5f5f6;
-      border-radius: 16px;
-      padding: 16px 14px 14px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.07);
-    }
-
-    /* Generic section */
-    .section {
-      background: #e8e8ea;
-      border-radius: 11px;
-      padding: 10px 12px;
-      margin-bottom: 8px;
-    }
-
-    .section-label {
-      font-size: 12px;
-      color: #6e6e73;
-      margin-bottom: 3px;
-      font-weight: 400;
-      letter-spacing: 0.2px;
-    }
-
-    .section-value {
-      font-size: 16.5px;
+    .header-title {
+      font-size: 17px;
+      font-weight: 600;
       color: #1c1c1e;
-      font-weight: 500;
-      line-height: 1.32;
-      letter-spacing: -0.1px;
-    }
-
-    /* Expires special layout */
-    .expires {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .expires-label {
-      font-size: 12.5px;
-      color: #6e6e73;
-      min-width: 58px;
-      letter-spacing: 0.1px;
-    }
-
-    .expires-item {
       flex: 1;
       text-align: center;
     }
 
-    .expires-num {
-      font-size: 25px;
+    .show-details {
+      font-size: 14px;
+      color: #007aff;
+      font-weight: 400;
+      white-space: nowrap;
+    }
+
+    /* === TOP SECTION: Green bar + White user info (attached together) === */
+    .top-section {
+      margin: 0 12px;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Animated green time bar - 45 degree continuous movement */
+    .time-bar {
+      padding: 16px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(
+        45deg,
+        #00c853 0%,
+        #f9fafa 25%,
+        #00e676 50%,
+        #fafcfb 75%,
+        #00c853 100%
+      );
+      background-size: 400% 400%;
+      animation: moveGradient 4.5s linear infinite;
+    }
+
+    @keyframes moveGradient {
+      0% {
+        background-position: 100% 50%;
+      }
+      100% {
+        background-position: 0% 50%;
+      }
+    }
+
+    .time-text {
+      font-size: 28px;
+      font-weight: 700;
+      color: #000000;
+      letter-spacing: 0.5px;
+      font-variant-numeric: tabular-nums;
+      position: relative;
+      z-index: 1;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.15);
+    }
+
+    .day-text {
+      font-size: 20px;
       font-weight: 600;
+      color: #000000;
+      position: relative;
+      z-index: 1;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.15);
+    }
+
+    /* White user info card - attached directly under green bar */
+    .content {
+      background: #ffffff;
+      padding: 18px 18px 16px;
+    }
+
+    .field {
+      margin-bottom: 16px;
+    }
+
+    .field:last-child {
+      margin-bottom: 4px;
+    }
+
+    .field-label {
+      font-size: 13px;
+      color: #8e8e93;
+      margin-bottom: 3px;
+      font-weight: 400;
+    }
+
+    .field-value {
+      font-size: 17px;
       color: #1c1c1e;
-      display: block;
-      line-height: 1.1;
-      letter-spacing: -0.3px;
+      font-weight: 500;
+      line-height: 1.3;
     }
 
-    .expires-unit {
-      font-size: 12px;
-      color: #6e6e73;
-      margin-top: 1px;
-      letter-spacing: 0.15px;
+    .field-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
     }
 
-    /* Valid zones pills */
+    .show-zones {
+      font-size: 14px;
+      color: #007aff;
+      font-weight: 400;
+      margin-top: 2px;
+    }
+
     .zones {
       display: flex;
       gap: 8px;
@@ -168,232 +192,212 @@
     }
 
     .zone-pill {
-      background: #3a3a3c;
-      color: #fff;
-      font-size: 13.5px;
+      background: #e8e8ed;
+      color: #1c1c1e;
+      font-size: 13px;
       font-weight: 600;
       padding: 5px 12px;
-      border-radius: 7px;
+      border-radius: 8px;
       letter-spacing: 0.2px;
     }
 
-    /* Dates row */
-    .dates-row {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 0;
-    }
-
-    .dates-row .section {
-      flex: 1;
-      margin-bottom: 0;
-    }
-
-    /* Bottom area: QR + status */
-    .bottom-area {
+    /* === BOTTOM SECTION: QR + texts (full width, separate) === */
+    .bottom-section {
+      margin: auto 12px 16px;   /* auto top pushes it to bottom, creates empty space */
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 16px;
       display: flex;
       align-items: flex-end;
       justify-content: space-between;
-      margin-top: 18px;
-      padding: 0 4px;
+      gap: 14px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+      position: relative;
+      z-index: 1;
     }
 
     .qr-box {
-      width: 168px;
-      height: 168px;
+      width: 120px;
+      height: 120px;
       background: #fff;
       border-radius: 10px;
-      padding: 6px;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
+      padding: 4px;
+      box-shadow: 0 1px 6px rgba(0,0,0,0.08);
+      flex-shrink: 0;
     }
 
     .qr-box > div,
-    .qr-box img,
     .qr-box canvas,
-    .qr-box table {
-      width: 156px !important;
-      height: 156px !important;
+    .qr-box table,
+    .qr-box img {
+      width: 112px !important;
+      height: 112px !important;
       max-width: 100%;
       max-height: 100%;
     }
 
-    .status-btn {
-      background: #34c759;
-      color: #fff;
-      font-size: 14.5px;
-      font-weight: 600;
-      padding: 10px 18px;
-      border-radius: 999px;
-      box-shadow: 0 2px 6px rgba(52,199,89,0.3);
-      white-space: nowrap;
-      margin-bottom: 8px;
-      letter-spacing: 0.1px;
+    .bottom-right {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 10px;
     }
 
-    /* Small chevron under QR */
-    .chevron {
-      text-align: center;
-      color: #aaa;
-      font-size: 14px;
-      margin-top: 6px;
+    .valid-btn {
+      background: #00c853;
+      color: #fff;
+      font-size: 15px;
+      font-weight: 600;
+      padding: 10px 20px;
+      border-radius: 999px;
+      box-shadow: 0 2px 8px rgba(0, 200, 83, 0.3);
+      white-space: nowrap;
+    }
+
+    .meta {
+      text-align: right;
+      font-size: 12px;
+      color: #8e8e93;
+      line-height: 1.45;
+    }
+
+    .meta strong {
+      color: #1c1c1e;
+      font-weight: 500;
+    }
+
+    /* Subtle wave background */
+    .app::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='40' viewBox='0 0 120 40'%3E%3Cpath d='M0 8 Q30 0 60 8 T120 8' fill='none' stroke='%23d0d0d0' stroke-width='1'/%3E%3Cpath d='M0 20 Q30 12 60 20 T120 20' fill='none' stroke='%23d0d0d0' stroke-width='1'/%3E%3Cpath d='M0 32 Q30 24 60 32 T120 32' fill='none' stroke='%23d0d0d0' stroke-width='1'/%3E%3C/svg%3E");
+      background-size: 100px 36px;
+      opacity: 0.4;
+      pointer-events: none;
+      z-index: 0;
     }
   </style>
 </head>
 <body>
-  <div class="ticket">
-    <!-- Top time + back -->
-    <div class="top-bar">
-      <div class="live-time" id="clock">00:00:00</div>
+  <div class="app">
+    <!-- Header -->
+    <div class="header">
       <div class="back-btn">‹</div>
+      <div class="header-title">Commuter card</div>
+      <div class="show-details">Show Details</div>
     </div>
 
-    <!-- Main content card -->
-    <div class="card">
-      <!-- Product type -->
-      <div class="section">
-        <div class="section-label">Product type</div>
-        <div class="section-value">
-          Commuter Card<br>
-          2 zones Adult
-        </div>
+    <!-- TOP SECTION: Green bar + User info (attached) -->
+    <div class="top-section">
+      <div class="time-bar">
+        <div class="time-text" id="clock">00:00:00</div>
+        <div class="day-text" id="day">Sunday</div>
       </div>
 
-      <!-- Expires -->
-      <div class="section expires">
-        <div class="expires-label">Expires:</div>
-        <div class="expires-item">
-          <span class="expires-num" id="exp-days">29</span>
-          <span class="expires-unit">Days</span>
+      <div class="content">
+        <div class="field">
+          <div class="field-label">Customer Type</div>
+          <div class="field-value" id="customer-type">Adult</div>
         </div>
-        <div class="expires-item">
-          <span class="expires-num" id="exp-hours">6</span>
-          <span class="expires-unit">Hours</span>
-        </div>
-        <div class="expires-item">
-          <span class="expires-num" id="exp-mins">16</span>
-          <span class="expires-unit">Minutes</span>
-        </div>
-      </div>
 
-      <!-- Time of purchase -->
-      <div class="section">
-        <div class="section-label">Time of purchase</div>
-        <div class="section-value" id="purchase-time">15 September 2026, 04:57:48</div>
-      </div>
-
-      <!-- Passenger -->
-      <div class="section">
-        <div class="section-label">Passenger</div>
-        <div class="section-value" id="passenger">1 ADULT</div>
-      </div>
-
-      <!-- Valid zones -->
-      <div class="section">
-        <div class="section-label">Valid zones</div>
-        <div class="zones">
-          <span class="zone-pill" id="zone1">MT510</span>
-          <span class="zone-pill" id="zone2">MT598</span>
+        <div class="field">
+          <div class="field-label">Name</div>
+          <div class="field-value" id="name">Mohammad Javad Beigrezaee</div>
         </div>
-      </div>
 
-      <!-- Start / End date -->
-      <div class="dates-row">
-        <div class="section">
-          <div class="section-label">Start date</div>
-          <div class="section-value" id="start-date">15 September 2026</div>
-        </div>
-        <div class="section">
-          <div class="section-label">End date</div>
-          <div class="section-value" id="end-date">14 October 2026</div>
-        </div>
-      </div>
-
-      <!-- QR + Status -->
-      <div class="bottom-area">
-        <div>
-          <div class="qr-box">
-            <div id="qrcode"></div>
+        <div class="field">
+          <div class="field-row">
+            <div>
+              <div class="field-label">Number of zones</div>
+              <div class="field-value" id="zones-count">2 zones</div>
+            </div>
+            <div class="show-zones">Show Zones</div>
           </div>
-          <div class="chevron">∨</div>
         </div>
-        <div class="status-btn" id="status">Inside valid area</div>
+
+        <div class="field">
+          <div class="field-label">Valid zones</div>
+          <div class="zones">
+            <span class="zone-pill" id="zone1">MT510</span>
+            <span class="zone-pill" id="zone2">MT598</span>
+          </div>
+        </div>
+
+        <div class="field">
+          <div class="field-label">Valid to</div>
+          <div class="field-value" id="valid-to">15. October 2026, 03:59</div>
+          <div class="field-value" id="valid-to"> <br></div>
+          <div class="field-value" id="valid-to"> <br></div>
+          <div class="field-value" id="valid-to"> <br></div>
+          <div class="field-value" id="valid-to"> <br></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BOTTOM SECTION: QR + Valid Area (full width, separate, small gap) -->
+    <div class="bottom-section">
+      <div class="qr-box">
+        <div id="qrcode"></div>
+      </div>
+      <div class="bottom-right">
+        <div class="valid-btn">Valid Area</div>
+        <div class="meta">
+          Valid from<br>
+          <strong id="valid-from">15.09.26, 04:57:48</strong><br>
+          Ticket number<br>
+          <strong id="ticket-number">1021975019V1-2</strong>
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- Offline QR Code library (no internet needed) -->
   <script src="qrcode.min.js"></script>
-
   <script>
-    // Live clock (only the top time is real)
     function updateClock() {
       const now = new Date();
       const h = String(now.getHours()).padStart(2, '0');
       const m = String(now.getMinutes()).padStart(2, '0');
       const s = String(now.getSeconds()).padStart(2, '0');
       document.getElementById('clock').textContent = `${h}:${m}:${s}`;
+
+      const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+      document.getElementById('day').textContent = days[now.getDay()];
     }
 
-    // Calculate remaining time until End date (end of that day)
-    function updateExpires() {
-      const endDateText = document.getElementById('end-date').textContent.trim(); // e.g. "14 October 2026"
-      const endDate = new Date(endDateText + ' 23:59:59'); // expire at end of the day
-
-      const now = new Date();
-      let diff = endDate - now;
-
-      if (diff < 0) diff = 0; // already expired
-
-      const totalMinutes = Math.floor(diff / 60000);
-      const days = Math.floor(totalMinutes / (60 * 24));
-      const hours = Math.floor((totalMinutes % (60 * 24)) / 60);
-      const minutes = totalMinutes % 60;
-
-      document.getElementById('exp-days').textContent = days;
-      document.getElementById('exp-hours').textContent = hours;
-      document.getElementById('exp-mins').textContent = minutes;
-    }
-
-    // Create QR instance once
     var qrcode = new QRCode(document.getElementById("qrcode"), {
-      width: 156,
-      height: 156,
+      width: 112,
+      height: 112,
       colorDark: "#000000",
       colorLight: "#ffffff",
-      correctLevel: QRCode.CorrectLevel.H   // higher error correction → denser modules
+      correctLevel: QRCode.CorrectLevel.H
     });
 
-    // Generate a real random QR code every second
     function generateRandomQR() {
-      // Longer random payload → higher QR version → denser look (closer to original)
-      const randomStr = 'TKT-' + Date.now().toString(36) + '-' + 
-                        Math.random().toString(36).substring(2) + 
-                        Math.random().toString(36).substring(2) + 
+      const randomStr = 'TKT-' + Date.now().toString(36) + '-' +
+                        Math.random().toString(36).substring(2) +
+                        Math.random().toString(36).substring(2) +
                         Math.random().toString(36).substring(2, 12).toUpperCase();
       qrcode.clear();
       qrcode.makeCode(randomStr);
     }
 
-    // Initial + every second
     updateClock();
-    updateExpires();
     generateRandomQR();
     setInterval(() => {
       updateClock();
-      updateExpires();
       generateRandomQR();
     }, 1000);
 
-    // Register Service Worker for PWA / offline support
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
         navigator.serviceWorker.register('./sw.js')
-          .then((reg) => console.log('Service Worker registered', reg.scope))
-          .catch((err) => console.log('Service Worker registration failed', err));
+          .then((reg) => console.log('SW registered', reg.scope))
+          .catch((err) => console.log('SW failed', err));
       });
     }
   </script>
